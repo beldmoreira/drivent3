@@ -26,8 +26,25 @@ async function getHotels(userId: number) {
   return hotels;
 }
 
+async function getHotelRooms(userId: number, hotelId: string) {
+  const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
+  if (!enrollment) {
+    throw notFoundError();
+  }
+  const ticket = await ticketRepository.findTicketByEnrollmentId(enrollment.id);
+  if (!ticket) {
+    throw notFoundError();
+  }
+  const rooms = await hotelRepository.findHotelRooms(hotelId);
+  if (!rooms) {
+    throw notFoundError();
+  }
+  return rooms;
+}
+
 const hotelsService = {
   getHotels,
+  getHotelRooms,
 };
 
 export default hotelsService;
